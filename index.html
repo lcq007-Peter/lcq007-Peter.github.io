@@ -3,275 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peter | AI Architect</title>
+    <title>Peter | AI Interface</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入极具现代感和几何感的字体：Outfit -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <!-- 引入圆润可爱的字体：Nunito -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --neon-cyan: #00f2fe;
-            --neon-purple: #8b5cf6;
-            --neon-pink: #ec4899;
-        }
-
         body {
-            font-family: 'Outfit', sans-serif;
-            background-color: #030712; /* 深邃星空黑 */
-            color: #ffffff;
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f7ff;
+            color: #2c3e50;
             overflow-x: hidden;
-            margin: 0;
-            /* 背景加上一层极细的网格线，增加科技感 */
-            background-image: 
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
         }
 
-        /* === 1. 极致丝滑的流体光晕 (Aurora Mesh) === */
-        .aurora-bg {
+        /* 1. 动感二次元背景：毛玻璃 + 漂浮波点 */
+        .anime-bg {
             position: fixed;
-            width: 100vw;
-            height: 100vh;
+            inset: 0;
             z-index: 0;
-            pointer-events: none;
-            filter: blur(100px);
-            opacity: 0.6;
+            background-image: url('https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px) brightness(1.05);
+            transform: scale(1.05);
         }
-        .aurora-1 {
-            position: absolute;
-            top: -10%; left: 10%; width: 50vw; height: 50vw;
-            background: radial-gradient(circle, var(--neon-purple), transparent 60%);
-            animation: drift 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .aurora-2 {
-            position: absolute;
-            bottom: -10%; right: 0; width: 60vw; height: 60vw;
-            background: radial-gradient(circle, var(--neon-cyan), transparent 60%);
-            animation: drift 20s infinite alternate-reverse cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .aurora-3 {
-            position: absolute;
-            top: 40%; left: 30%; width: 40vw; height: 40vw;
-            background: radial-gradient(circle, var(--neon-pink), transparent 50%);
-            animation: drift 12s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(224,242,254,0.6));
+            background-image: radial-gradient(#38bdf8 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.3;
         }
 
-        @keyframes drift {
-            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-            100% { transform: translate(100px, 150px) scale(1.2) rotate(45deg); }
-        }
-
-        /* === 2. 水晶悬浮导航 (借鉴了你参考代码的 Pill Header) === */
-        .glass-pill {
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
-        }
-
-        /* === 3. 文字全息渐变 === */
-        .hologram-text {
-            background: linear-gradient(135deg, #fff 0%, #a5b4fc 50%, #fbcfe8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: shine 4s linear infinite;
-        }
-        @keyframes shine { to { background-position: 200% center; } }
-
-        /* === 4. 独创的 AI 量子核心特效 (右侧视觉焦点) === */
-        .quantum-core {
-            position: relative;
-            width: 380px;
-            height: 380px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .core-ring {
-            position: absolute;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.1);
-        }
-        .ring-1 {
-            width: 100%; height: 100%;
-            border-top: 2px solid var(--neon-cyan);
-            border-right: 2px solid var(--neon-cyan);
-            animation: spin 8s linear infinite;
-        }
-        .ring-2 {
-            width: 80%; height: 80%;
-            border-bottom: 2px dashed var(--neon-purple);
-            border-left: 2px dashed var(--neon-purple);
-            animation: spin 6s linear infinite reverse;
-        }
-        .ring-3 {
-            width: 60%; height: 60%;
-            border-top: 2px dotted var(--neon-pink);
-            animation: spin 4s linear infinite;
-        }
-        .core-center {
-            width: 120px; height: 120px;
-            background: radial-gradient(circle, #fff, var(--neon-cyan) 40%, transparent 80%);
-            border-radius: 50%;
-            box-shadow: 0 0 50px var(--neon-cyan), 0 0 100px var(--neon-purple);
-            animation: pulse-core 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes pulse-core {
-            0% { transform: scale(0.9); opacity: 0.8; filter: hue-rotate(0deg); }
-            100% { transform: scale(1.1); opacity: 1; filter: hue-rotate(30deg); }
-        }
-
-        /* === 5. 悬浮玻璃数据卡片 === */
-        .data-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
-        }
-        .data-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,242,254,0.15), inset 0 1px 0 rgba(255,255,255,0.2);
-            border-color: rgba(0, 242, 254, 0.4);
-        }
-
-        /* === 6. 丝滑入场动画 === */
-        .stagger-up {
+        /* 2. 果冻回弹动画 (Bouncy) */
+        .bounce-in {
             opacity: 0;
-            transform: translateY(30px);
-            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transform: scale(0.3);
+            animation: jellyIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-        @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
+        @keyframes jellyIn {
+            to { opacity: 1; transform: scale(1); }
+        }
 
-        /* 参考代码中的浮动 AI 聊天按钮 */
-        .chat-widget {
-            position: fixed; bottom: 30px; right: 30px; z-index: 99;
-            width: 60px; height: 60px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
-            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        /* 3. 核心：人物破框站立 (Out of Bounds) */
+        .character-mount {
+            position: absolute;
+            bottom: -50px;
+            right: -30px;
+            height: 120%;
+            z-index: 20;
+            pointer-events: none;
+            /* 呼吸浮动动效 */
+            animation: characterFloat 4s ease-in-out infinite;
         }
-        .chat-widget:hover { transform: scale(1.15) rotate(-10deg); }
+        @keyframes characterFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+        }
+
+        /* 4. 二次元圆角卡片 */
+        .anime-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            border: 4px solid #ffffff;
+            box-shadow: 0 20px 40px rgba(56, 189, 248, 0.15);
+            position: relative;
+            overflow: visible; /* 允许内容破框 */
+        }
+
+        /* 5. 专属二次元UI装饰 */
+        .shining-star {
+            position: absolute;
+            color: #fcd34d;
+            animation: pulse 1.5s infinite alternate;
+        }
     </style>
 </head>
-<body class="min-h-screen relative flex flex-col items-center">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- 背景光效层 -->
-    <div class="aurora-bg">
-        <div class="aurora-1"></div>
-        <div class="aurora-2"></div>
-        <div class="aurora-3"></div>
-    </div>
+    <!-- 背景层 -->
+    <div class="anime-bg"></div>
+    <div class="bg-overlay"></div>
 
-    <!-- 顶部悬浮水晶导航 -->
-    <nav class="fixed top-6 z-50 glass-pill px-8 py-4 rounded-full flex items-center justify-between w-[90%] max-w-5xl stagger-up" style="animation-delay: 0.1s;">
-        <div class="flex items-center gap-3 cursor-pointer">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-purple-500 p-[2px]">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Peter" class="w-full h-full rounded-full object-cover bg-black" alt="avatar">
-            </div>
-            <span class="font-extrabold text-lg tracking-wide text-white">Peter<span class="text-cyan-400">.AI</span></span>
-        </div>
-        <div class="hidden md:flex gap-8 text-sm font-semibold text-gray-300">
-            <a href="#" class="hover:text-cyan-300 transition-colors">神经中枢</a>
-            <a href="#" class="hover:text-purple-300 transition-colors">代码库</a>
-            <a href="#" class="hover:text-pink-300 transition-colors">算法实验室</a>
-        </div>
-        <button class="px-5 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-sm font-bold transition-all border border-white/10">
-            联系终端
-        </button>
-    </nav>
-
-    <!-- 核心视觉区域 -->
-    <main class="relative z-10 w-full max-w-6xl px-6 pt-40 pb-20 flex flex-col lg:flex-row items-center justify-between gap-16 flex-1">
+    <!-- 主交互卡片 -->
+    <main class="anime-card w-full max-w-5xl p-8 md:p-12 flex flex-col lg:flex-row items-center gap-12 z-10 bounce-in">
         
-        <!-- 左侧文本：视觉冲击力极强 -->
-        <div class="flex-1 text-left">
-            <!-- 运行状态标签 -->
-            <div class="stagger-up inline-flex items-center gap-3 px-4 py-2 rounded-full glass-pill text-xs font-bold tracking-widest mb-8 border-cyan-500/30 text-cyan-300" style="animation-delay: 0.2s;">
-                <span class="relative flex h-3 w-3">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
-                </span>
-                SYSTEM: ONLINE & LEARNING
+        <!-- 装饰星星 ✨ -->
+        <span class="shining-star text-3xl top-6 left-6">✦</span>
+        <span class="shining-star text-2xl bottom-10 left-1/2">✦</span>
+
+        <!-- 左侧内容区 -->
+        <div class="flex-1 text-left relative z-10">
+            <!-- 顶部头像与名字 -->
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-14 h-14 rounded-full border-4 border-white shadow-lg overflow-hidden">
+                    <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Arona&backgroundColor=b6e3f4" alt="avatar" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h2 class="text-2xl font-black text-cyan-600">Peter</h2>
+                    <p class="text-sm font-bold text-gray-400">/// AI 研究员</p>
+                </div>
             </div>
 
             <!-- 主标题 -->
-            <h1 class="stagger-up text-6xl md:text-[5.5rem] font-black leading-[1.1] tracking-tight mb-6" style="animation-delay: 0.3s;">
-                Architecting <br>
-                <span class="hologram-text">Intelligence.</span>
+            <h1 class="text-4xl md:text-5xl font-black text-slate-800 leading-tight mb-4">
+                早上好，老师！<br>
+                今天也要继续构建<br>
+                <span class="text-cyan-500">超酷的 AI 吗？</span>
             </h1>
 
-            <p class="stagger-up text-lg md:text-xl text-gray-400 mb-10 max-w-lg font-light leading-relaxed" style="animation-delay: 0.4s;">
-                我是一名<strong class="text-white font-semibold">人工智能工程师</strong>。专注于将最前沿的 LLM 大语言模型与创新的工程架构结合，创造打破常规的数字产品。
+            <p class="text-slate-600 text-sm md:text-base mb-8 max-w-md leading-relaxed font-bold">
+                这里是 Peter 的神经中枢。主攻大语言模型和数据算法，偶尔也会写写这些充满魔法的生动前端。
             </p>
 
-            <!-- 交互按钮组 -->
-            <div class="stagger-up flex flex-wrap items-center gap-5" style="animation-delay: 0.5s;">
-                <button class="px-8 py-4 rounded-full bg-white text-black font-extrabold tracking-wide hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-all duration-300">
-                    探索开源矩阵
+            <!-- 萌系按钮组 -->
+            <div class="flex flex-wrap gap-4">
+                <button class="px-6 py-3 bg-cyan-400 hover:bg-cyan-500 text-white font-black rounded-full shadow-[0_8px_0_#0284c7] hover:translate-y-[2px] hover:shadow-[0_6px_0_#0284c7] transition-all">
+                    访问代码库 🚀
                 </button>
-                <button class="px-8 py-4 rounded-full glass-pill text-white font-bold tracking-wide hover:bg-white/10 transition-all duration-300 flex items-center gap-2 group">
-                    查阅技术博客
-                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                <button class="px-6 py-3 bg-white border-2 border-cyan-400 text-cyan-500 font-black rounded-full shadow-[0_8px_0_#e0f2fe] hover:translate-y-[2px] hover:shadow-[0_6px_0_#e0f2fe] transition-all">
+                    查阅日志 (๑•̀ㅂ•́)و✧
                 </button>
             </div>
         </div>
 
-        <!-- 右侧视觉：动态量子核心 + 悬浮数据卡片 -->
-        <div class="stagger-up flex-1 relative flex justify-center items-center h-[500px] w-full" style="animation-delay: 0.6s;">
+        <!-- 右侧视觉区：立绘破框！ -->
+        <div class="relative w-full lg:w-[320px] h-[350px] lg:h-[450px]">
+            <!-- 底座发光环 -->
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 w-[200px] h-[40px] bg-cyan-300/30 rounded-full blur-lg"></div>
             
-            <!-- 纯 CSS 实现的动态核心 -->
-            <div class="quantum-core absolute">
-                <div class="core-ring ring-1"></div>
-                <div class="core-ring ring-2"></div>
-                <div class="core-ring ring-3"></div>
-                <div class="core-center"></div>
-            </div>
-
-            <!-- 覆盖在量子核心上的毛玻璃面板，营造前后景深度 -->
-            <div class="data-card absolute right-0 top-10 p-6 w-64 shadow-2xl z-20">
-                <div class="text-xs text-cyan-400 font-bold tracking-wider mb-1">NEURAL ENGINE</div>
-                <div class="text-3xl font-black text-white mb-4">v3.0.4</div>
-                <div class="space-y-3">
-                    <div class="w-full bg-gray-800/50 rounded-full h-1.5 overflow-hidden">
-                        <div class="bg-gradient-to-r from-cyan-400 to-purple-500 h-full w-[85%] relative">
-                            <div class="absolute right-0 top-0 bottom-0 w-2 bg-white rounded-full animate-pulse"></div>
-                        </div>
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-400 font-mono">
-                        <span>MODEL_LOAD</span><span>85%</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="data-card absolute left-[-20px] bottom-10 p-5 w-56 shadow-2xl z-20 backdrop-blur-xl">
-                <div class="flex items-center gap-3 mb-2">
-                    <div class="w-2 h-2 rounded-full bg-pink-500 animate-ping"></div>
-                    <span class="text-sm font-bold text-gray-200">Processing...</span>
-                </div>
-                <p class="text-xs text-gray-400 font-mono leading-relaxed opacity-80">
-                    > Initialize logic net <br>
-                    > Parsing user prompt <br>
-                    > Generating UI layer...
-                </p>
+            <!-- 核心：透明背景二次元立绘 -->
+            <img src="https://raw.githubusercontent.com/ironfist-moe/anime-assets/main/arona_render.png" 
+                 alt="Anime Girl" 
+                 class="character-mount">
+                 
+            <!-- 漂浮的气泡卡片 -->
+            <div class="absolute top-10 left-[-20px] bg-white/90 px-4 py-2 rounded-2xl shadow-lg border-2 border-cyan-200 text-cyan-600 text-xs font-bold animate-bounce">
+                System: 运转正常! ✨
             </div>
         </div>
 
     </main>
-
-    <!-- 底部右侧悬浮 AI 聊天球 (借鉴参考代码) -->
-    <div class="chat-widget stagger-up" style="animation-delay: 1s;" title="唤醒 AI 助手">
-        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-    </div>
 
 </body>
 </html>
