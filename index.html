@@ -3,139 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peter - AI Engineer</title>
+    <title>Peter - Tech & AI</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入高级无衬线字体：Plus Jakarta Sans (极具现代科技感) -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- 引入非常极客且现代的字体：Space Grotesk -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* 基础重置 */
         body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #030712; /* 极深灰/近乎纯黑 */
-            color: #f3f4f6;
+            font-family: 'Space Grotesk', sans-serif; 
+            background-color: #050505; /* 纯正极夜黑底色，让色彩更弹 */
+            color: #ffffff;
             overflow-x: hidden;
             margin: 0;
         }
 
-        /* 动画 1：流体背景光晕缓慢移动 */
-        @keyframes blob {
-            0% { transform: translate(0px, 0px) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-            100% { transform: translate(0px, 0px) scale(1); }
+        /* 1. 狂暴流体背景动画 */
+        @keyframes blob-spin {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(50px, -50px) scale(1.2) rotate(120deg); }
+            66% { transform: translate(-40px, 40px) scale(0.8) rotate(240deg); }
+            100% { transform: translate(0, 0) scale(1) rotate(360deg); }
         }
-        .animate-blob { animation: blob 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1); }
-        .animation-delay-2000 { animation-delay: 2s; }
-        
-        /* 动画 2：丝滑浮现入场效果 */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-up {
-            opacity: 0;
-            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        /* 设置不同的延迟，产生“瀑布流”入场的高级感 */
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
-        .delay-300 { animation-delay: 300ms; }
-        .delay-400 { animation-delay: 400ms; }
-        .delay-500 { animation-delay: 500ms; }
+        .orb-cyan { animation: blob-spin 12s infinite alternate ease-in-out; }
+        .orb-pink { animation: blob-spin 15s infinite alternate-reverse ease-in-out; }
+        .orb-yellow { animation: blob-spin 18s infinite alternate ease-in-out; }
 
-        /* 渐变文字效果 */
-        .text-gradient {
-            background-clip: text;
+        /* 2. 名字的无限流光特效 */
+        .text-glow-animate {
+            background: linear-gradient(to right, #00f2fe, #4facfe, #f093fb, #f5576c, #00f2fe);
+            background-size: 200% auto;
+            color: transparent;
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-image: linear-gradient(90deg, #60a5fa, #a855f7, #ec4899);
+            background-clip: text;
+            animation: textFlow 3s linear infinite;
+        }
+        @keyframes textFlow {
+            to { background-position: 200% center; }
+        }
+
+        /* 3. 极客打字机与光标闪烁 */
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.2em;
+            background-color: #00f2fe;
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+            margin-left: 5px;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* 4. 全息霓虹流光边框卡片（高级玩法） */
+        .neon-border-card {
+            position: relative;
+            background: rgba(20, 20, 20, 0.4);
+            border-radius: 1.5rem;
+            z-index: 1;
+            /* 内部毛玻璃 */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .neon-border-card::before {
+            content: "";
+            position: absolute;
+            inset: -2px; /* 边框厚度 */
+            border-radius: 1.6rem;
+            background: linear-gradient(45deg, #00f2fe, transparent, #f5576c, transparent, #f093fb);
+            background-size: 200% 200%;
+            z-index: -1;
+            animation: borderRotate 4s linear infinite;
+        }
+        @keyframes borderRotate {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        /* 5. 悬浮动画与入场 */
+        .floating { animation: floatBox 6s ease-in-out infinite; }
+        @keyframes floatBox {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
         }
         
-        /* 毛玻璃质感 */
-        .glass-panel {
-            background: rgba(17, 24, 39, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        .pop-in {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes popIn {
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
     </style>
 </head>
-<body class="min-h-screen relative flex items-center justify-center selection:bg-purple-500/30">
+<body class="min-h-screen relative flex items-center justify-center">
 
-    <!-- === 背景视觉层 (动态光晕) === -->
+    <!-- === 炫彩高饱和流体背景 === -->
     <div class="fixed inset-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-        <!-- 左上角紫色光球 -->
-        <div class="absolute top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-purple-900/40 rounded-full mix-blend-screen filter blur-[120px] animate-blob"></div>
-        <!-- 右下角蓝色光球 -->
-        <div class="absolute bottom-[-10%] right-[-10%] w-[40rem] h-[40rem] bg-blue-900/40 rounded-full mix-blend-screen filter blur-[120px] animate-blob animation-delay-2000"></div>
+        <!-- 亮青色能量球 -->
+        <div class="absolute top-[-10%] left-[10%] w-[35rem] h-[35rem] bg-cyan-500/40 rounded-full mix-blend-screen blur-[100px] orb-cyan"></div>
+        <!-- 赛博粉能量球 -->
+        <div class="absolute bottom-[10%] right-[5%] w-[40rem] h-[40rem] bg-fuchsia-600/40 rounded-full mix-blend-screen blur-[120px] orb-pink"></div>
+        <!-- 明黄点缀球 -->
+        <div class="absolute top-[40%] left-[40%] w-[20rem] h-[20rem] bg-yellow-400/30 rounded-full mix-blend-screen blur-[90px] orb-yellow"></div>
     </div>
 
-    <!-- === 顶部极简导航 === -->
-    <nav class="fixed top-0 w-full p-6 z-50 flex justify-between items-center fade-up">
-        <div class="text-white/80 font-bold tracking-widest text-sm uppercase">PETER.DEV</div>
-        <div class="flex gap-6 text-sm font-medium text-white/60">
-            <a href="#" class="hover:text-white transition-colors duration-300">文章</a>
-            <a href="#" class="hover:text-white transition-colors duration-300">项目</a>
-            <a href="#" class="hover:text-white transition-colors duration-300">关于</a>
+    <!-- === 顶部导航 === -->
+    <nav class="fixed top-0 w-full p-6 z-50 flex justify-between items-center pop-in" style="animation-delay: 0.1s;">
+        <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_#00f2fe]"></div>
+            <span class="font-bold tracking-widest text-sm uppercase text-white drop-shadow-md">PETER / AI</span>
+        </div>
+        <div class="flex gap-8 text-sm font-semibold text-white/70">
+            <a href="#" class="hover:text-cyan-300 transition-colors">实验室</a>
+            <a href="#" class="hover:text-pink-400 transition-colors">开源</a>
+            <a href="#" class="hover:text-yellow-300 transition-colors">日志</a>
         </div>
     </nav>
 
-    <!-- === 核心内容区 === -->
-    <main class="relative z-10 w-full max-w-4xl px-6 py-20 flex flex-col items-center text-center">
+    <!-- === 主视觉区域 === -->
+    <main class="relative z-10 w-full max-w-5xl px-6 py-20 flex flex-col lg:flex-row items-center justify-between gap-16">
         
-        <!-- 身份标识 -->
-        <div class="fade-up delay-100 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs text-white/70 tracking-wider mb-8 hover:bg-white/10 transition-all duration-300 cursor-default">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            探索 AI 与工程的边界
-        </div>
+        <!-- 左侧文本区 -->
+        <div class="flex-1 text-left">
+            <!-- 极客标签 -->
+            <div class="pop-in inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-900/30 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-widest mb-6 shadow-[0_0_15px_rgba(0,242,254,0.2)]" style="animation-delay: 0.2s;">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                SYSTEM ONLINE
+            </div>
 
-        <!-- 主标题 -->
-        <h1 class="fade-up delay-200 text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
-            Hi, I'm <span class="text-gradient">Peter</span>.<br>
-            AI Engineer & Builder.
-        </h1>
+            <!-- 震撼大标题 -->
+            <h1 class="pop-in text-6xl md:text-8xl font-black tracking-tighter mb-4" style="animation-delay: 0.3s;">
+                Hi, I'm <br>
+                <span class="text-glow-animate">Peter.</span>
+            </h1>
 
-        <!-- 副标题/描述 -->
-        <p class="fade-up delay-300 text-lg md:text-xl text-gray-400 mb-12 max-w-2xl font-light leading-relaxed">
-            我不只是写代码，我将人工智能转化为优雅的工程化产品。专注于大模型应用、数据算法以及令人惊叹的用户体验。
-        </p>
+            <!-- 打字机职位描述 -->
+            <div class="pop-in text-xl md:text-2xl text-gray-300 mb-8 font-medium h-8" style="animation-delay: 0.4s;">
+                Building <span class="text-white font-bold">AI Agents</span> & Future Tech<span class="typing-cursor"></span>
+            </div>
 
-        <!-- 技能堆栈 (磁性标签) -->
-        <div class="fade-up delay-400 flex flex-wrap justify-center gap-3 mb-14 max-w-3xl">
-            <!-- 这里运用了 group-hover 实现细腻的交互感 -->
-            <div class="group px-5 py-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer">
-                <span class="text-gray-300 group-hover:text-blue-400 transition-colors">Python & PyTorch</span>
-            </div>
-            <div class="group px-5 py-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer">
-                <span class="text-gray-300 group-hover:text-purple-400 transition-colors">LLM Agents</span>
-            </div>
-            <div class="group px-5 py-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer">
-                <span class="text-gray-300 group-hover:text-emerald-400 transition-colors">Data Science</span>
-            </div>
-            <div class="group px-5 py-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer">
-                <span class="text-gray-300 group-hover:text-pink-400 transition-colors">Web Frontend</span>
-            </div>
-        </div>
+            <p class="pop-in text-gray-400 text-base md:text-lg mb-10 max-w-lg leading-relaxed" style="animation-delay: 0.5s;">
+                突破传统的界限。我致力于大语言模型开发、数据工程与极具美学的交互体验，将疯狂的想法变成现实的工业级代码。
+            </p>
 
-        <!-- 交互面板 (Glassmorphism 玻璃拟态) -->
-        <div class="fade-up delay-500 glass-panel w-full p-8 md:p-10 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8 group">
-            <div class="text-left flex-1">
-                <h3 class="text-2xl font-semibold mb-2 text-white">随时准备构建下一个酷东西。</h3>
-                <p class="text-gray-400 text-sm">阅读我的技术博客，或者查看我最近开源的项目代码。</p>
-            </div>
-            
-            <div class="flex gap-4">
-                <!-- 主要按钮 -->
-                <button class="relative overflow-hidden px-8 py-3.5 rounded-2xl bg-white text-black font-semibold shadow-[0_0_40px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_rgba(255,255,255,0.5)] hover:scale-105 transition-all duration-300">
-                    浏览博客
+            <!-- 炫酷按钮组 -->
+            <div class="pop-in flex items-center gap-5" style="animation-delay: 0.6s;">
+                <button class="px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold tracking-wide hover:scale-105 hover:shadow-[0_0_30px_rgba(0,242,254,0.6)] transition-all duration-300">
+                    启动项目协议
                 </button>
-                <!-- 纯净的 GitHub 图标按钮 -->
-                <a href="#" class="p-3.5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/20 hover:-translate-y-1 transition-all duration-300 text-white flex items-center justify-center">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"></path></svg>
-                </a>
+                <button class="px-8 py-4 rounded-xl bg-white/5 border border-white/10 text-white font-bold tracking-wide hover:bg-white/10 hover:border-pink-500/50 hover:shadow-[0_0_20px_rgba(245,87,108,0.4)] transition-all duration-300">
+                    查看代码仓
+                </button>
+            </div>
+        </div>
+
+        <!-- 右侧全息悬浮卡片 -->
+        <div class="pop-in flex-1 w-full max-w-md floating" style="animation-delay: 0.7s;">
+            <!-- 这是那个带流光边框的神秘卡片 -->
+            <div class="neon-border-card p-8 text-left shadow-2xl shadow-cyan-500/20">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-fuchsia-500 to-cyan-500 flex items-center justify-center text-white font-bold text-xl shadow-[0_0_15px_rgba(240,147,251,0.6)]">
+                        P
+                    </div>
+                    <span class="text-xs text-cyan-400 font-mono bg-cyan-900/40 px-2 py-1 rounded">v2.0.4</span>
+                </div>
+                
+                <h3 class="text-2xl font-bold text-white mb-2">当前状态：核心编译中...</h3>
+                <p class="text-gray-400 text-sm mb-6 line-clamp-3">
+                    > 正在训练 70B 语言模型参数... <br>
+                    > 优化前端渲染管线... <br>
+                    > 连接到全球服务器节点...
+                </p>
+
+                <!-- 进度条效果 -->
+                <div class="w-full bg-gray-800 rounded-full h-1.5 mb-2 overflow-hidden">
+                    <div class="bg-gradient-to-r from-cyan-400 to-fuchsia-500 h-1.5 rounded-full w-[78%] relative">
+                        <div class="absolute right-0 top-0 bottom-0 w-2 bg-white rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-500 font-mono">
+                    <span>SYS_LOAD</span>
+                    <span class="text-cyan-400">78%</span>
+                </div>
             </div>
         </div>
 
