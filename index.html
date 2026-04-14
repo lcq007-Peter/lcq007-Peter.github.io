@@ -3,212 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peter の Blog</title>
+    <title>Peter | Neural Nexus</title>
+    <!-- 引入 Tailwind, Animate.css 和 Three.js -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;900&family=Noto+Sans+SC:wght@500;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #0d1117; /* 极深蓝黑背景 */
-            --card-bg: rgba(22, 27, 34, 0.6); /* 半透明卡片背景 */
-            --accent-blue: #38bdf8;
+            --primary: #00f2fe;
+            --secondary: #7000ff;
+            --glass: rgba(15, 23, 42, 0.75);
         }
-
         body {
-            font-family: 'Inter', 'Noto Sans SC', sans-serif;
-            background-color: var(--bg-color);
-            color: #e6edf3;
+            font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif;
+            background-color: #020617;
+            color: white;
+            overflow-x: hidden;
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
         }
 
-        /* 顶部导航增强 */
-        .nav-glass {
-            background: rgba(13, 17, 23, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        /* 1. 背景网格与极光 (参考源码中的 blog-hero__grid) */
+        .hero-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+        }
+        .glow-orb {
+            position: absolute;
+            width: 40vw; height: 40vw;
+            background: radial-gradient(circle, rgba(112, 0, 255, 0.15), transparent 70%);
+            filter: blur(80px);
+            animation: drift 20s infinite alternate;
         }
 
-        /* 主容器：磨砂玻璃质感 */
-        .main-container {
-            background: var(--card-bg);
+        @keyframes drift { to { transform: translate(100px, 100px); } }
+
+        /* 2. 3D 地球容器 */
+        .earth-3d-wrap {
+            display: inline-block;
+            width: 1em; height: 1em;
+            vertical-align: middle;
+            margin-left: 0.2em;
+        }
+
+        /* 3. 精致卡片 (Bento Box) */
+        .glass-card {
+            background: var(--glass);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            position: relative;
+        }
+
+        /* 4. 二次元立绘 (破框效果) */
+        .character-portrait {
+            position: absolute;
+            top: -60px;
+            right: 20px;
+            height: 120%;
+            z-index: 20;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+            transform: rotate(5deg);
+            transition: all 0.4s ease;
+        }
+        .character-portrait:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+
+        /* 5. 聊天浮窗样式 (参考 chat-widget 代码) */
+        .chat-panel {
+            position: fixed; bottom: 100px; right: 30px;
+            width: 350px; height: 500px;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
             overflow: hidden;
         }
-
-        /* 文字背后的环境光晕 */
-        .glow-sphere {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(56, 189, 248, 0) 70%);
-            top: 10%;
-            left: -100px;
-            z-index: 0;
-            pointer-events: none;
-            animation: pulse-glow 8s infinite alternate;
-        }
-
-        @keyframes pulse-glow {
-            from { opacity: 0.5; transform: scale(1); }
-            to { opacity: 1; transform: scale(1.2); }
-        }
-
-        /* 右侧倾斜立绘卡片 */
-        .character-card {
-            position: absolute;
-            top: -40px;
-            right: 20px;
-            width: 180px;
-            height: 240px;
-            z-index: 20;
-            transform: rotate(10deg);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
-        }
-        .character-card:hover {
-            transform: rotate(5deg) translateY(-10px) scale(1.05);
-        }
-        .character-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 20px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* 搜索按钮渐变 */
-        .btn-search {
-            background: linear-gradient(135deg, #0ea5e9, #2dd4bf);
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
-            transition: all 0.3s ease;
-        }
-        .btn-search:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.5);
-        }
-
-        /* 社交图标微动效 */
-        .social-link {
-            transition: all 0.3s ease;
-            opacity: 0.7;
-        }
-        .social-link:hover {
-            opacity: 1;
-            transform: translateY(-3px);
-            color: var(--accent-blue);
-        }
-
-        /* 响应式调整 */
-        @media (max-width: 1024px) {
-            .character-card { display: none; }
+        .chat-bubble {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1001;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3);
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-6 md:p-12">
+
+    <div class="hero-backdrop">
+        <div class="glow-orb" style="top: 10%; left: 10%;"></div>
+    </div>
 
     <!-- 顶部导航 -->
-    <nav class="nav-glass fixed top-0 inset-x-0 z-50 px-8 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-            <span class="text-xl font-bold tracking-tight">Peter の Blog</span>
-            <div class="w-8 h-8 rounded-full overflow-hidden border border-gray-700">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Peter" alt="avatar">
-            </div>
+    <nav class="relative z-50 flex justify-between items-center mb-16 animate__animated animate__fadeInDown">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl font-black tracking-tighter">PETER<span class="text-cyan-400">.LOG</span></span>
         </div>
-        <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
-            <a href="#" class="text-white">首页</a>
-            <a href="#" class="hover:text-white transition">每日新闻</a>
-            <a href="#" class="hover:text-white transition">博客</a>
-            <a href="#" class="hover:text-white transition">相册</a>
-            <a href="#" class="hover:text-white transition">项目</a>
+        <div class="hidden md:flex gap-10 text-sm font-bold opacity-70">
+            <a href="#" class="hover:text-cyan-400">终端</a>
+            <a href="#" class="hover:text-cyan-400">算力</a>
+            <a href="#" class="hover:text-cyan-400">日志</a>
         </div>
     </nav>
 
-    <!-- 主便当盒区域 -->
-    <main class="max-w-6xl mx-auto mt-24 w-full main-container p-8 md:p-16 flex flex-col lg:flex-row gap-16 relative">
+    <!-- 主 Hero 区 (致敬 blog-hero) -->
+    <main class="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row gap-10">
         
-        <!-- 背景环境光 -->
-        <div class="glow-sphere"></div>
-
-        <!-- 左侧内容区 -->
-        <div class="flex-1 z-10">
-            <!-- 顶部小标签 -->
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-800/50 border border-gray-700/50 text-[10px] font-bold tracking-widest text-gray-400 mb-8">
-                <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
-                PETER の BLOG
-            </div>
-
-            <!-- 核心标题 -->
-            <div class="relative mb-6">
-                <h1 class="text-7xl md:text-8xl font-extrabold tracking-tighter leading-none">
-                    Hello<br>World
+        <!-- 左侧核心区 -->
+        <div class="flex-1 flex flex-col justify-center">
+            <div class="animate__animated animate__fadeInLeft">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold mb-6">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    CORE SYSTEM: ACTIVE
+                </div>
+                
+                <h1 class="text-7xl md:text-8xl font-black leading-[0.9] mb-8">
+                    Hello <br> World<span class="earth-3d-wrap"><canvas id="earth-canvas"></canvas></span>
                 </h1>
-                <!-- 3D地球占位 -->
-                <div class="absolute top-1/2 right-0 md:right-20 transform -translate-y-1/2 text-6xl">🌍</div>
-            </div>
 
-            <p class="text-gray-400 text-lg mb-10 font-medium">AI 工程师 | 记录技术、生活与思考</p>
-
-            <!-- 技能标签组 -->
-            <div class="flex flex-wrap gap-3 mb-12">
-                <span class="px-4 py-2 rounded-xl bg-gray-800/40 border border-gray-700/50 text-xs font-semibold">AI 工程实践</span>
-                <span class="px-4 py-2 rounded-xl bg-emerald-900/20 text-emerald-400 border border-emerald-800/30 text-xs font-semibold">12 篇内容沉淀</span>
-                <span class="px-4 py-2 rounded-xl bg-gray-800/40 border border-gray-700/50 text-xs font-semibold">技术 · 生活 · 思考</span>
-            </div>
-
-            <!-- 操作按钮 -->
-            <div class="flex items-center gap-4 mb-12">
-                <button class="px-8 py-3.5 rounded-2xl bg-white text-black font-bold hover:bg-gray-200 transition-all shadow-xl">浏览文章</button>
-                <button class="px-8 py-3.5 rounded-2xl bg-gray-800/50 border border-gray-700 hover:bg-gray-700 transition-all text-white font-bold">关于我</button>
-            </div>
-
-            <!-- 社交图标 -->
-            <div class="flex items-center gap-6">
-                <a href="#" class="social-link"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"></path></svg></a>
-                <a href="#" class="social-link"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></a>
-                <a href="#" class="social-link"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 19C6 19 8 13 14 13M6 13C6 13 8 7 14 7M4 19A2 2 0 006 21H18A2 2 0 0020 19V5A2 2 0 0018 3H6A2 2 0 004 5V19Z"></path></svg></a>
-            </div>
-        </div>
-
-        <!-- 右侧搜索互动区 -->
-        <div class="w-full lg:w-[400px] relative">
-            
-            <!-- 倾斜立绘卡片 (绝对定位，破框而出) -->
-            <div class="character-card">
-                <img src="https://raw.githubusercontent.com/ironfist-moe/anime-assets/main/arona_render.png" alt="Card Character">
-            </div>
-
-            <!-- 搜索面板 -->
-            <div class="bg-gray-900/40 border border-gray-700/50 rounded-[32px] p-8 h-full relative z-10 flex flex-col">
-                <p class="text-cyan-400 text-[10px] font-bold tracking-widest mb-2">EXPLORE</p>
-                <h2 class="text-3xl font-bold mb-4 leading-tight">从首页直接<br>搜索整个网站。</h2>
-                <p class="text-gray-400 text-sm mb-10 leading-relaxed">
-                    输入关键词后回车，直接带您去速定位文章、日常记录和相册内容。
+                <p class="text-xl text-gray-400 max-w-lg mb-10 leading-relaxed">
+                    AI 工程师 | 探索大模型边界，致力于将人类智慧与硅基逻辑完美融合。
                 </p>
 
-                <!-- 搜索条 -->
-                <div class="bg-gray-950/50 border border-gray-800 rounded-2xl p-2 flex items-center mb-6">
-                    <input type="text" placeholder="搜索关键词..." class="bg-transparent border-none outline-none text-sm text-gray-300 w-full px-4">
-                    <button class="btn-search text-white text-xs font-bold py-3 px-6 rounded-xl shrink-0">进入搜索</button>
-                </div>
-
-                <!-- 底部快捷标签 -->
-                <div class="flex flex-wrap gap-2 mt-auto">
-                    <span class="px-3 py-1.5 rounded-full bg-gray-800/60 border border-gray-700/50 text-[10px] text-gray-300 cursor-pointer hover:bg-gray-700 transition">首页</span>
-                    <span class="px-3 py-1.5 rounded-full bg-gray-800/60 border border-gray-700/50 text-[10px] text-gray-300 cursor-pointer hover:bg-gray-700 transition">每日新闻</span>
-                    <span class="px-3 py-1.5 rounded-full bg-gray-800/60 border border-gray-700/50 text-[10px] text-gray-300 cursor-pointer hover:bg-gray-700 transition">博客</span>
-                    <span class="px-3 py-1.5 rounded-full bg-gray-800/60 border border-gray-700/50 text-[10px] text-gray-300 cursor-pointer hover:bg-gray-700 transition">相册</span>
+                <div class="flex gap-4">
+                    <button class="px-8 py-4 bg-white text-black font-black rounded-2xl hover:scale-105 transition-all">访问矩阵</button>
+                    <button class="px-8 py-4 bg-gray-800/50 border border-gray-700 text-white font-black rounded-2xl">关于我</button>
                 </div>
             </div>
         </div>
 
+        <!-- 右侧检索区 (致敬 blog-hero__panel-card) -->
+        <div class="w-full lg:w-[450px] relative animate__animated animate__fadeInRight">
+            <!-- 破框立绘 -->
+            <img src="https://raw.githubusercontent.com/ironfist-moe/anime-assets/main/arona_render.png" class="character-portrait" alt="character">
+            
+            <div class="glass-card p-10 mt-16 lg:mt-0 relative h-full">
+                <span class="text-cyan-400 font-bold text-xs tracking-[0.2em] mb-4 block">EXPLORE NEXUS</span>
+                <h2 class="text-3xl font-black mb-4">从控制台直接检索</h2>
+                <p class="text-gray-400 text-sm mb-10 leading-relaxed">输入关键词，我们将通过神经链路直接定位所有文章、记录和相册内容。</p>
+
+                <!-- 搜索框 -->
+                <div class="bg-gray-950/80 rounded-2xl p-2 flex border border-gray-800 mb-6">
+                    <input type="text" placeholder="输入搜索协议..." class="bg-transparent border-none outline-none flex-1 px-4 text-sm">
+                    <button class="bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-3 rounded-xl font-bold text-xs">执行搜索</button>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold">每日新闻</span>
+                    <span class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold">算法实验室</span>
+                    <span class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold">相册矩阵</span>
+                </div>
+            </div>
+        </div>
     </main>
 
+    <!-- AI 聊天组件 (致敬 chat-widget) -->
+    <div class="chat-panel glass-card animate__animated" id="chatPanel">
+        <div class="p-4 border-b border-white/10 flex justify-between items-center bg-white/5">
+            <span class="text-sm font-bold text-cyan-400">AI 助手控制台</span>
+            <button class="text-gray-400 hover:text-white" onclick="toggleChat()">✕</button>
+        </div>
+        <div class="flex-1 p-4 overflow-y-auto space-y-4 text-sm" id="chatMsgs">
+            <div class="bg-gray-800/50 p-3 rounded-2xl rounded-bl-none max-w-[80%]">
+                你好，Peter！系统已就绪，随时可以进行逻辑推演。
+            </div>
+        </div>
+        <div class="p-4 border-t border-white/10 flex gap-2">
+            <input type="text" placeholder="发送指令..." class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm outline-none focus:border-cyan-500 transition-all">
+            <button class="bg-cyan-500 p-2 rounded-xl">🚀</button>
+        </div>
+    </div>
+
+    <div class="chat-bubble" onclick="toggleChat()">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    </div>
+
+    <script>
+        // 1. 三维核心 (Three.js Earth Logic)
+        function init3D() {
+            const canvas = document.getElementById('earth-canvas');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            
+            renderer.setSize(100, 100);
+            camera.position.z = 2;
+
+            const geometry = new THREE.SphereGeometry(1, 32, 32);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0x0ea5e9,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.5
+            });
+            const earth = new THREE.Mesh(geometry, material);
+            scene.add(earth);
+
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(5, 5, 5);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
+            function animate() {
+                requestAnimationFrame(animate);
+                earth.rotation.y += 0.01;
+                earth.rotation.x += 0.005;
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+
+        // 2. 聊天浮窗逻辑
+        function toggleChat() {
+            const panel = document.getElementById('chatPanel');
+            if (panel.style.display === 'flex') {
+                panel.classList.replace('animate__fadeInUp', 'animate__fadeOutDown');
+                setTimeout(() => panel.style.display = 'none', 500);
+            } else {
+                panel.style.display = 'flex';
+                panel.classList.add('animate__fadeInUp');
+            }
+        }
+
+        window.onload = init3D;
+    </script>
 </body>
 </html>
