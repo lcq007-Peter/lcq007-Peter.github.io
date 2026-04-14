@@ -3,209 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peter | Neural Nexus</title>
-    <!-- 引入 Tailwind, Animate.css 和 Three.js -->
+    <title>Peter | Neural Nexus Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
     <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;900&family=Noto+Sans+SC:wght@500;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Space+Grotesk:wght@700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #00f2fe;
-            --secondary: #7000ff;
-            --glass: rgba(15, 23, 42, 0.75);
+            --bg-deep: #0b1120;
+            --accent-cyan: #0ea5e9;
+            --accent-yellow: #fbbf24;
         }
         body {
-            font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif;
-            background-color: #020617;
-            color: white;
-            overflow-x: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-deep);
+            color: #f1f5f9;
             margin: 0;
+            overflow: hidden; /* 强制全屏感 */
         }
 
-        /* 1. 背景网格与极光 (参考源码中的 blog-hero__grid) */
-        .hero-backdrop {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            background-image: linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: radial-gradient(circle at center, black, transparent 80%);
-        }
-        .glow-orb {
-            position: absolute;
-            width: 40vw; height: 40vw;
-            background: radial-gradient(circle, rgba(112, 0, 255, 0.15), transparent 70%);
-            filter: blur(80px);
-            animation: drift 20s infinite alternate;
-        }
-
-        @keyframes drift { to { transform: translate(100px, 100px); } }
-
-        /* 2. 3D 地球容器 */
-        .earth-3d-wrap {
-            display: inline-block;
-            width: 1em; height: 1em;
-            vertical-align: middle;
-            margin-left: 0.2em;
-        }
-
-        /* 3. 精致卡片 (Bento Box) */
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        /* 4. 二次元立绘 (破框效果) */
-        .character-portrait {
-            position: absolute;
-            top: -60px;
-            right: 20px;
-            height: 120%;
-            z-index: 20;
-            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
-            transform: rotate(5deg);
-            transition: all 0.4s ease;
-        }
-        .character-portrait:hover {
-            transform: rotate(0deg) scale(1.05);
-        }
-
-        /* 5. 聊天浮窗样式 (参考 chat-widget 代码) */
-        .chat-panel {
-            position: fixed; bottom: 100px; right: 30px;
-            width: 350px; height: 500px;
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
+        /* 1. 极致背景：动态网格 + 极光浮动 */
+        .hero-bg {
+            position: fixed; inset: 0; z-index: 0;
+            pointer-events: none;
             overflow: hidden;
         }
-        .chat-bubble {
-            position: fixed; bottom: 30px; right: 30px;
-            width: 60px; height: 60px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 1001;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3);
+        .hero-grid {
+            position: absolute; inset: -100px;
+            background-image: linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+            background-size: 36px 36px;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+            animation: grid-move 20s linear infinite;
+        }
+        @keyframes grid-move { 0% { transform: translate(0, 0); } 100% { transform: translate(36px, 36px); } }
+
+        .glow-orb {
+            position: absolute; border-radius: 999px; filter: blur(100px); opacity: 0.6;
+            animation: orb-float 15s ease-in-out infinite alternate;
+        }
+        .orb-1 { width: 40vw; height: 40vw; background: rgba(251, 191, 36, 0.15); top: -10%; right: -5%; }
+        .orb-2 { width: 50vw; height: 50vw; background: rgba(14, 165, 233, 0.12); bottom: -10%; left: -10%; }
+        @keyframes orb-float { from { transform: translate(0,0) rotate(0deg); } to { transform: translate(100px, 50px) rotate(45deg); } }
+
+        /* 2. 悬浮导航栏 */
+        .nav-pill {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 3. 主容器：复刻 blog-hero__panel-card 的精致感 */
+        .main-hero {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 40px;
+            position: relative;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* 4. 破框人物卡片：完全复刻右侧倾斜悬浮感 */
+        .portrait-wrapper {
+            position: absolute;
+            top: -60px;
+            right: 40px;
+            width: clamp(140px, 18vw, 200px);
+            z-index: 50;
+            transform: rotate(8deg);
+            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.6));
+            animation: character-float 6s ease-in-out infinite;
+        }
+        @keyframes character-float { 0%, 100% { transform: rotate(8deg) translateY(0); } 50% { transform: rotate(6deg) translateY(-15px); } }
+        
+        .portrait-img {
+            border-radius: 28px;
+            border: 8px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .portrait-tag {
+            position: absolute; left: -15px; bottom: 20px;
+            background: #0f172a; color: white; padding: 8px 12px;
+            border-radius: 999px; font-size: 10px; font-weight: 800;
+            letter-spacing: 0.1em; text-transform: uppercase;
+        }
+
+        /* 5. 3D地球嵌入 */
+        .earth-container {
+            display: inline-flex; width: 0.9em; height: 0.9em;
+            vertical-align: middle; margin-left: 0.15em;
+        }
+
+        /* 搜索框精致化 */
+        .search-form {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 8px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .search-btn {
+            background: linear-gradient(135deg, #0ea5e9, #0891b2);
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
         }
     </style>
 </head>
-<body class="p-6 md:p-12">
+<body class="min-h-screen flex flex-col items-center justify-center px-4 md:px-12 py-20">
 
-    <div class="hero-backdrop">
-        <div class="glow-orb" style="top: 10%; left: 10%;"></div>
+    <!-- 背景视觉层 -->
+    <div class="hero-bg">
+        <div class="hero-grid"></div>
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
     </div>
 
     <!-- 顶部导航 -->
-    <nav class="relative z-50 flex justify-between items-center mb-16 animate__animated animate__fadeInDown">
+    <nav class="fixed top-8 z-[100] nav-pill px-8 py-4 rounded-full flex items-center justify-between w-[90%] max-w-6xl animate__animated animate__fadeInDown">
         <div class="flex items-center gap-3">
-            <span class="text-2xl font-black tracking-tighter">PETER<span class="text-cyan-400">.LOG</span></span>
+            <span class="text-xl font-black tracking-tight">Peter<span class="text-cyan-400">.nexus</span></span>
         </div>
-        <div class="hidden md:flex gap-10 text-sm font-bold opacity-70">
-            <a href="#" class="hover:text-cyan-400">终端</a>
-            <a href="#" class="hover:text-cyan-400">算力</a>
-            <a href="#" class="hover:text-cyan-400">日志</a>
+        <div class="hidden md:flex gap-10 text-sm font-bold text-gray-400">
+            <a href="#" class="text-white">首页</a>
+            <a href="#" class="hover:text-white transition">日志</a>
+            <a href="#" class="hover:text-white transition">实验室</a>
+            <a href="#" class="hover:text-white transition">相册</a>
+        </div>
+        <div class="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Peter" alt="avatar">
         </div>
     </nav>
 
-    <!-- 主 Hero 区 (致敬 blog-hero) -->
-    <main class="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row gap-10">
+    <!-- 主展示区：全屏大尺寸布局 -->
+    <main class="main-hero w-full max-w-7xl min-h-[650px] flex flex-col lg:flex-row gap-16 p-8 md:p-16 z-10 animate__animated animate__zoomIn">
         
-        <!-- 左侧核心区 -->
+        <!-- 左侧：震撼大标题区 -->
         <div class="flex-1 flex flex-col justify-center">
-            <div class="animate__animated animate__fadeInLeft">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold mb-6">
-                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                    CORE SYSTEM: ACTIVE
+            <div class="animate__animated animate__fadeInLeft animate__delay-1s">
+                <!-- 状态标签 -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold tracking-widest text-cyan-400 mb-10 uppercase">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee]"></span>
+                    Neural Link Active
                 </div>
-                
-                <h1 class="text-7xl md:text-8xl font-black leading-[0.9] mb-8">
-                    Hello <br> World<span class="earth-3d-wrap"><canvas id="earth-canvas"></canvas></span>
+
+                <h1 class="text-6xl md:text-[8rem] font-black leading-[0.85] tracking-tighter mb-8 text-white">
+                    Hello <br> World<span class="earth-container"><canvas id="earth-canvas"></canvas></span>
                 </h1>
 
-                <p class="text-xl text-gray-400 max-w-lg mb-10 leading-relaxed">
-                    AI 工程师 | 探索大模型边界，致力于将人类智慧与硅基逻辑完美融合。
+                <p class="text-gray-400 text-xl md:text-2xl mb-12 max-w-xl font-medium leading-relaxed">
+                    AI 工程师 | 构建超越想象的神经架构，探索数字世界的终极逻辑。
                 </p>
 
-                <div class="flex gap-4">
-                    <button class="px-8 py-4 bg-white text-black font-black rounded-2xl hover:scale-105 transition-all">访问矩阵</button>
-                    <button class="px-8 py-4 bg-gray-800/50 border border-gray-700 text-white font-black rounded-2xl">关于我</button>
+                <div class="flex flex-wrap gap-5">
+                    <button class="px-10 py-4 bg-white text-black font-black rounded-2xl hover:scale-105 transition-all shadow-2xl">启动矩阵</button>
+                    <button class="px-10 py-4 bg-white/5 border border-white/10 text-white font-black rounded-2xl hover:bg-white/10 transition-all">关于我</button>
                 </div>
             </div>
         </div>
 
-        <!-- 右侧检索区 (致敬 blog-hero__panel-card) -->
-        <div class="w-full lg:w-[450px] relative animate__animated animate__fadeInRight">
-            <!-- 破框立绘 -->
-            <img src="https://raw.githubusercontent.com/ironfist-moe/anime-assets/main/arona_render.png" class="character-portrait" alt="character">
+        <!-- 右侧：破框检索区 -->
+        <div class="w-full lg:w-[460px] relative mt-20 lg:mt-0 animate__animated animate__fadeInRight animate__delay-1s">
             
-            <div class="glass-card p-10 mt-16 lg:mt-0 relative h-full">
-                <span class="text-cyan-400 font-bold text-xs tracking-[0.2em] mb-4 block">EXPLORE NEXUS</span>
-                <h2 class="text-3xl font-black mb-4">从控制台直接检索</h2>
-                <p class="text-gray-400 text-sm mb-10 leading-relaxed">输入关键词，我们将通过神经链路直接定位所有文章、记录和相册内容。</p>
+            <!-- 破框而出的倾斜卡片 (核心视觉) -->
+            <div class="portrait-wrapper">
+                <img src="https://raw.githubusercontent.com/ironfist-moe/anime-assets/main/arona_render.png" class="portrait-img" alt="Peter Character">
+                <span class="portrait-tag">PERSONAL LOGBOOK</span>
+            </div>
 
-                <!-- 搜索框 -->
-                <div class="bg-gray-950/80 rounded-2xl p-2 flex border border-gray-800 mb-6">
-                    <input type="text" placeholder="输入搜索协议..." class="bg-transparent border-none outline-none flex-1 px-4 text-sm">
-                    <button class="bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-3 rounded-xl font-bold text-xs">执行搜索</button>
-                </div>
+            <!-- 右侧互动面板 -->
+            <div class="bg-white/5 border border-white/10 rounded-[35px] p-10 h-full flex flex-col justify-end relative overflow-hidden group">
+                <!-- 背景微光 -->
+                <div class="absolute inset-0 bg-gradient-to-b from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div class="relative z-10">
+                    <span class="text-cyan-400 text-xs font-black tracking-widest mb-4 block">EXPLORE THE NEXUS</span>
+                    <h2 class="text-4xl font-black mb-6 text-white leading-tight">从首页直接检索<br>系统核心内容。</h2>
+                    <p class="text-gray-400 text-sm mb-10 leading-relaxed">
+                        输入协议关键词，系统将通过神经链路直接带您进入所有文章、实验室记录和相册矩阵。
+                    </p>
 
-                <div class="flex flex-wrap gap-2">
-                    <span class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold">每日新闻</span>
-                    <span class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold">算法实验室</span>
-                    <span class="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold">相册矩阵</span>
+                    <!-- 精致搜索条 -->
+                    <div class="search-form flex items-center mb-8">
+                        <input type="text" placeholder="搜索核心协议..." class="flex-1 bg-transparent border-none outline-none px-4 text-black text-sm font-bold">
+                        <button class="search-btn text-white text-xs font-black py-4 px-8 rounded-xl">执行搜索</button>
+                    </div>
+
+                    <!-- 快速链接 (致敬 blog-hero__quicklinks) -->
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold text-gray-400 hover:text-white transition cursor-pointer">每日新闻</span>
+                        <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold text-gray-400 hover:text-white transition cursor-pointer">算法库</span>
+                        <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold text-gray-400 hover:text-white transition cursor-pointer">相册</span>
+                    </div>
                 </div>
             </div>
         </div>
+
     </main>
 
-    <!-- AI 聊天组件 (致敬 chat-widget) -->
-    <div class="chat-panel glass-card animate__animated" id="chatPanel">
-        <div class="p-4 border-b border-white/10 flex justify-between items-center bg-white/5">
-            <span class="text-sm font-bold text-cyan-400">AI 助手控制台</span>
-            <button class="text-gray-400 hover:text-white" onclick="toggleChat()">✕</button>
-        </div>
-        <div class="flex-1 p-4 overflow-y-auto space-y-4 text-sm" id="chatMsgs">
-            <div class="bg-gray-800/50 p-3 rounded-2xl rounded-bl-none max-w-[80%]">
-                你好，Peter！系统已就绪，随时可以进行逻辑推演。
-            </div>
-        </div>
-        <div class="p-4 border-t border-white/10 flex gap-2">
-            <input type="text" placeholder="发送指令..." class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm outline-none focus:border-cyan-500 transition-all">
-            <button class="bg-cyan-500 p-2 rounded-xl">🚀</button>
-        </div>
-    </div>
-
-    <div class="chat-bubble" onclick="toggleChat()">
-        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-    </div>
-
     <script>
-        // 1. 三维核心 (Three.js Earth Logic)
+        // 初始化 3D 地球逻辑 (复刻源码中的 initEarth)
         function init3D() {
             const canvas = document.getElementById('earth-canvas');
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setSize(120, 120);
+            
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-            
-            renderer.setSize(100, 100);
             camera.position.z = 2;
 
             const geometry = new THREE.SphereGeometry(1, 32, 32);
-            const material = new THREE.MeshPhongMaterial({
-                color: 0x0ea5e9,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.5
+            // 使用线框增加极客感
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0x0ea5e9, 
+                wireframe: true, 
+                transparent: true, 
+                opacity: 0.4 
             });
             const earth = new THREE.Mesh(geometry, material);
             scene.add(earth);
+
+            // 加入一个内部实体发光球
+            const core = new THREE.Mesh(
+                new THREE.SphereGeometry(0.7, 32, 32),
+                new THREE.MeshBasicMaterial({ color: 0x0ea5e9, transparent: true, opacity: 0.1 })
+            );
+            scene.add(core);
 
             const light = new THREE.DirectionalLight(0xffffff, 1);
             light.position.set(5, 5, 5);
@@ -214,25 +235,12 @@
 
             function animate() {
                 requestAnimationFrame(animate);
-                earth.rotation.y += 0.01;
-                earth.rotation.x += 0.005;
+                earth.rotation.y += 0.005;
+                earth.rotation.x += 0.002;
                 renderer.render(scene, camera);
             }
             animate();
         }
-
-        // 2. 聊天浮窗逻辑
-        function toggleChat() {
-            const panel = document.getElementById('chatPanel');
-            if (panel.style.display === 'flex') {
-                panel.classList.replace('animate__fadeInUp', 'animate__fadeOutDown');
-                setTimeout(() => panel.style.display = 'none', 500);
-            } else {
-                panel.style.display = 'flex';
-                panel.classList.add('animate__fadeInUp');
-            }
-        }
-
         window.onload = init3D;
     </script>
 </body>
