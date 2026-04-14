@@ -3,263 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peter.Nexus | Neural Interface</title>
+    <title>Peter の Blog</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #00f2fe;
-            --accent: #7000ff;
-            --bg: #020617;
+            --bg-color: #0d1117; /* 极深蓝黑背景 */
+            --card-bg: rgba(22, 27, 34, 0.6); /* 半透明卡片背景 */
+            --accent-blue: #38bdf8;
         }
 
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: var(--bg);
-            color: white;
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            background-color: var(--bg-color);
+            color: #e6edf3;
             margin: 0;
-            overflow: hidden; /* 禁止滚动，打造全屏终端感 */
-            cursor: none; /* 隐藏原生鼠标，使用自定义光标 */
-        }
-
-        /* 1. 自定义量子光标 */
-        #custom-cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            background: var(--primary);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: difference;
-            transition: transform 0.1s ease;
-        }
-
-        /* 2. 3D 视差容器 */
-        .parallax-wrapper {
-            perspective: 1000px;
-            width: 100vw;
-            height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        .main-terminal {
-            width: 90%;
-            max-width: 1100px;
-            height: 600px;
-            background: rgba(15, 23, 42, 0.6);
+        /* 顶部导航增强 */
+        .nav-glass {
+            background: rgba(13, 17, 23, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* 主容器：磨砂玻璃质感 */
+        .main-container {
+            background: var(--card-bg);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 242, 254, 0.3);
-            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
         }
 
-        /* 3. 二次元全息立绘 & 故障动效 */
-        .hologram-girl {
+        /* 文字背后的环境光晕 */
+        .glow-sphere {
             position: absolute;
-            right: -50px;
-            bottom: -20px;
-            height: 110%;
-            z-index: 10;
-            filter: drop-shadow(0 0 20px var(--primary));
-            animation: glitch 4s infinite;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(56, 189, 248, 0) 70%);
+            top: 10%;
+            left: -100px;
+            z-index: 0;
             pointer-events: none;
+            animation: pulse-glow 8s infinite alternate;
         }
 
-        @keyframes glitch {
-            0% { transform: translate(0); clip-path: inset(0 0 0 0); }
-            2% { transform: translate(-5px, 2px); clip-path: inset(10% 0 40% 0); }
-            4% { transform: translate(5px, -2px); clip-path: inset(50% 0 10% 0); }
-            6% { transform: translate(0); }
-            100% { transform: translate(0); }
+        @keyframes pulse-glow {
+            from { opacity: 0.5; transform: scale(1); }
+            to { opacity: 1; transform: scale(1.2); }
         }
 
-        /* 4. 磁力按钮 */
-        .mag-button {
-            transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
-            position: relative;
-        }
-
-        /* 5. 动态 HUD 边框 */
-        .hud-line {
+        /* 右侧倾斜立绘卡片 */
+        .character-card {
             position: absolute;
-            background: var(--primary);
-            opacity: 0.3;
+            top: -40px;
+            right: 20px;
+            width: 180px;
+            height: 240px;
+            z-index: 20;
+            transform: rotate(10deg);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
         }
-        .v-line { width: 1px; height: 100px; }
-        .h-line { height: 1px; width: 100px; }
-
-        /* 6. 背景 Canvas */
-        #particle-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
+        .character-card:hover {
+            transform: rotate(5deg) translateY(-10px) scale(1.05);
+        }
+        .character-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
         }
 
-        .neon-text {
-            text-shadow: 0 0 10px var(--primary), 0 0 20px var(--accent);
+        /* 搜索按钮渐变 */
+        .btn-search {
+            background: linear-gradient(135deg, #0ea5e9, #2dd4bf);
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.5);
+        }
+
+        /* 社交图标微动效 */
+        .social-link {
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+        .social-link:hover {
+            opacity: 1;
+            transform: translateY(-3px);
+            color: var(--accent-blue);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 1024px) {
+            .character-card { display: none; }
         }
     </style>
 </head>
-<body>
+<body class="p-4 md:p-8">
 
-    <!-- 背景量子粒子场 -->
-    <canvas id="particle-canvas"></canvas>
-    
-    <!-- 自定义跟随光标 -->
-    <div id="custom-cursor"></div>
+    <!-- 顶部导航 -->
+    <nav class="nav-glass fixed top-0 inset-x-0 z-50 px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <span class="text-xl font-bold tracking-tight">Peter の Blog</span>
+            <div class="w-8 h-8 rounded-full overflow-hidden border border-gray-700">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Peter" alt="avatar">
+            </div>
+        </div>
+        <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+            <a href="#" class="text-white">首页</a>
+            <a href="#" class="hover:text-white transition">每日新闻</a>
+            <a href="#" class="hover:text-white transition">博客</a>
+            <a href="#" class="hover:text-white transition">相册</a>
+            <a href="#" class="hover:text-white transition">项目</a>
+        </div>
+    </nav>
 
-    <div class="parallax-wrapper">
-        <!-- 主终端界面 -->
-        <div class="main-terminal p-10 flex flex-col justify-between overflow-hidden" id="terminal">
-            
-            <!-- HUD 装饰角 -->
-            <div class="hud-line h-line top-0 left-0"></div>
-            <div class="hud-line v-line top-0 left-0"></div>
-            <div class="hud-line h-line bottom-0 right-0"></div>
-            <div class="hud-line v-line bottom-0 right-0"></div>
+    <!-- 主便当盒区域 -->
+    <main class="max-w-6xl mx-auto mt-24 w-full main-container p-8 md:p-16 flex flex-col lg:flex-row gap-16 relative">
+        
+        <!-- 背景环境光 -->
+        <div class="glow-sphere"></div>
 
-            <!-- 顶栏 -->
-            <header class="flex justify-between items-center relative z-20">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center font-bold text-2xl shadow-lg">P</div>
-                    <div>
-                        <h2 class="text-xl font-bold tracking-tighter neon-text">PETER.NEXUS</h2>
-                        <p class="text-[10px] text-cyan-400 font-mono opacity-70">STATUS: CORE_EVOLUTION_ACTIVE</p>
-                    </div>
-                </div>
-                <div class="flex gap-6 text-xs font-mono">
-                    <span class="text-gray-500">MEM: 12.4GB</span>
-                    <span class="text-cyan-400">LATENCY: 14ms</span>
-                </div>
-            </header>
-
-            <!-- 中间内容区 -->
-            <div class="relative z-20 flex-1 flex flex-col justify-center mt-10">
-                <h1 class="text-6xl md:text-8xl font-black mb-4 tracking-tight">
-                    NEXT-GEN <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-500">AI AGENT.</span>
-                </h1>
-                <p class="max-w-md text-gray-400 text-sm leading-relaxed mb-8 border-l-2 border-cyan-500 pl-4">
-                    > Peter 正在重新定义人类与机器的交互边界。 <br>
-                    > 深度学习、神经渲染、以及极致的感官体验。
-                </p>
-
-                <!-- 交互区 -->
-                <div class="flex gap-6">
-                    <button class="mag-button px-10 py-4 bg-cyan-500 text-black font-black rounded-sm skew-x-[-12deg] hover:bg-white transition-all shadow-[8px_8px_0_rgba(112,0,255,0.6)]">
-                        初始化连接
-                    </button>
-                    <button class="mag-button px-10 py-4 border border-cyan-500 text-cyan-500 font-bold rounded-sm skew-x-[-12deg] hover:bg-cyan-500/10 transition-all">
-                        查看源代码
-                    </button>
-                </div>
+        <!-- 左侧内容区 -->
+        <div class="flex-1 z-10">
+            <!-- 顶部小标签 -->
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-800/50 border border-gray-700/50 text-[10px] font-bold tracking-widest text-gray-400 mb-8">
+                <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                PETER の BLOG
             </div>
 
-            <!-- 底部实时代码流 -->
-            <footer class="relative z-20 flex justify-between items-end">
-                <div class="font-mono text-[10px] text-gray-500">
-                    <div>[0.4552] ATTACH_AI_CORE... DONE</div>
-                    <div>[0.8922] LOADING_NEURAL_WEIGHTS... 100%</div>
-                    <div class="text-cyan-400">> ALL SYSTEMS OPERATIONAL</div>
-                </div>
-                <div class="text-right">
-                    <div class="text-3xl font-bold font-mono">24.04.01</div>
-                    <div class="text-[10px] text-purple-400">PETER_PRIVATE_TERMINAL</div>
-                </div>
-            </footer>
+            <!-- 核心标题 -->
+            <div class="relative mb-6">
+                <h1 class="text-7xl md:text-8xl font-extrabold tracking-tighter leading-none">
+                    Hello<br>World
+                </h1>
+                <!-- 3D地球占位 -->
+                <div class="absolute top-1/2 right-0 md:right-20 transform -translate-y-1/2 text-6xl">🌍</div>
+            </div>
 
-            <!-- 全息少女立绘 -->
-            <img src="https://raw.githubusercontent.com/ironfist-moe/anime-assets/main/arona_render.png" 
-                 alt="AI Interface" 
-                 class="hologram-girl" id="character">
+            <p class="text-gray-400 text-lg mb-10 font-medium">AI 工程师 | 记录技术、生活与思考</p>
+
+            <!-- 技能标签组 -->
+            <div class="flex flex-wrap gap-3 mb-12">
+                <span class="px-4 py-2 rounded-xl bg-gray-800/40 border border-gray-700/50 text-xs font-semibold">AI 工程实践</span>
+                <span class="px-4 py-2 rounded-xl bg-emerald-900/20 text-emerald-400 border border-emerald-800/30 text-xs font-semibold">12 篇内容沉淀</span>
+                <span class="px-4 py-2 rounded-xl bg-gray-800/40 border border-gray-700/50 text-xs font-semibold">技术 · 生活 · 思考</span>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="flex items-center gap-4 mb-12">
+                <button class="px-8 py-3.5 rounded-2xl bg-white text-black font-bold hover:bg-gray-200 transition-all shadow-xl">浏览文章</button>
+                <button class="px-8 py-3.5 rounded-2xl bg-gray-800/50 border border-gray-700 hover:bg-gray-700 transition-all text-white font-bold">关于我</button>
+            </div>
+
+            <!-- 社交图标 -->
+            <div class="flex items-center gap-6">
+                <a href="#" class="social-link"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"></path></svg></a>
+                <a href="#" class="social-link"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></a>
+                <a href="#" class="social-link"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 19C6 19 8 13 14 13M6 13C6 13 8 7 14 7M4 19A2 2 0 006 21H18A2 2 0 0020 19V5A2 2 0 0018 3H6A2 2 0 004 5V19Z"></path></svg></a>
+            </div>
         </div>
-    </div>
 
-    <script>
-        // 1. 3D 视差动效
-        const terminal = document.getElementById('terminal');
-        const character = document.getElementById('character');
-        
-        document.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-            terminal.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        <!-- 右侧搜索互动区 -->
+        <div class="w-full lg:w-[400px] relative">
             
-            // 人物反向视差，增强景深
-            character.style.transform = `translateX(${-xAxis * 2}px) translateY(${-yAxis * 2}px)`;
-            
-            // 鼠标跟随
-            const cursor = document.getElementById('custom-cursor');
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
+            <!-- 倾斜立绘卡片 (绝对定位，破框而出) -->
+            <div class="character-card">
+                <img src="https://raw.githubusercontent.com/ironfist-moe/anime-assets/main/arona_render.png" alt="Card Character">
+            </div>
 
-        // 2. 磁力按钮逻辑
-        const buttons = document.querySelectorAll('.mag-button');
-        buttons.forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px) skewX(-12deg)`;
-            });
-            btn.addEventListener('mouseleave', () => {
-                btn.style.transform = `translate(0px, 0px) skewX(-12deg)`;
-            });
-        });
+            <!-- 搜索面板 -->
+            <div class="bg-gray-900/40 border border-gray-700/50 rounded-[32px] p-8 h-full relative z-10 flex flex-col">
+                <p class="text-cyan-400 text-[10px] font-bold tracking-widest mb-2">EXPLORE</p>
+                <h2 class="text-3xl font-bold mb-4 leading-tight">从首页直接<br>搜索整个网站。</h2>
+                <p class="text-gray-400 text-sm mb-10 leading-relaxed">
+                    输入关键词后回车，直接带您去速定位文章、日常记录和相册内容。
+                </p>
 
-        // 3. 背景粒子 Canvas (神经网络模拟)
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+                <!-- 搜索条 -->
+                <div class="bg-gray-950/50 border border-gray-800 rounded-2xl p-2 flex items-center mb-6">
+                    <input type="text" placeholder="搜索关键词..." class="bg-transparent border-none outline-none text-sm text-gray-300 w-full px-4">
+                    <button class="btn-search text-white text-xs font-bold py-3 px-6 rounded-xl shrink-0">进入搜索</button>
+                </div>
 
-        let particles = [];
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 1;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                if (this.y < 0) this.y = canvas.height;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(0, 242, 254, 0.5)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+                <!-- 底部快捷标签 -->
+                <div class="flex flex-wrap gap-2 mt-auto">
+                    <span class="px-3 py-1.5 rounded-full bg-gray-800/60 border border-gray-700/50 text-[10px] text-gray-300 cursor-pointer hover:bg-gray-700 transition">首页</span>
+                    <span class="px-3 py-1.5 rounded-full bg-gray-800/60 border border-gray-700/50 text-[10px] text-gray-300 cursor-pointer hover:bg-gray-700 transition">每日新闻</span>
+                    <span class="px-3 py-1.5 rounded-full bg-gray-800/60 border border-gray-700/50 text-[10px] text-gray-300 cursor-pointer hover:bg-gray-700 transition">博客</span>
+                    <span class="px-3 py-1.5 rounded-full bg-gray-800/60 border border-gray-700/50 text-[10px] text-gray-300 cursor-pointer hover:bg-gray-700 transition">相册</span>
+                </div>
+            </div>
+        </div>
 
-        function init() {
-            for (let i = 0; i < 100; i++) particles.push(new Particle());
-        }
+    </main>
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-            requestAnimationFrame(animate);
-        }
-        init();
-        animate();
-    </script>
 </body>
 </html>
