@@ -3,143 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jian の Blog - 首页</title>
-    <!-- 引入 Tailwind CSS (CDN版本，方便直接运行) -->
+    <title>Peter - AI Engineer</title>
+    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 自定义一些特定的颜色和动画配置 -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'bg-dark': '#0b1120',      // 整体背景深蓝
-                        'card-dark': '#131b2f',    // 卡片背景稍亮的深蓝
-                        'accent-cyan': '#06b6d4',  // 主题青色
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- 引入高级无衬线字体：Plus Jakarta Sans (极具现代科技感) -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* 引入好看的无衬线字体 */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #0b1120; color: white; }
+        /* 基础重置 */
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #030712; /* 极深灰/近乎纯黑 */
+            color: #f3f4f6;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        /* 动画 1：流体背景光晕缓慢移动 */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob { animation: blob 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1); }
+        .animation-delay-2000 { animation-delay: 2s; }
         
-        /* 左下角的青色背景光晕效果 */
-        .glow-bg {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(6,182,212,0.15) 0%, rgba(11,17,32,0) 70%);
-            bottom: -50px;
-            left: -50px;
-            z-index: 0;
-            pointer-events: none;
+        /* 动画 2：丝滑浮现入场效果 */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up {
+            opacity: 0;
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        /* 设置不同的延迟，产生“瀑布流”入场的高级感 */
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        .delay-500 { animation-delay: 500ms; }
+
+        /* 渐变文字效果 */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(90deg, #60a5fa, #a855f7, #ec4899);
+        }
+        
+        /* 毛玻璃质感 */
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
-<body class="min-h-screen relative overflow-x-hidden">
+<body class="min-h-screen relative flex items-center justify-center selection:bg-purple-500/30">
 
-    <!-- 顶部导航栏 -->
-    <nav class="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto border-b border-gray-800/50">
-        <!-- Logo 区域 -->
-        <div class="flex items-center gap-3">
-            <span class="text-2xl font-bold tracking-tight">Jian の Blog</span>
-            <svg class="w-5 h-5 text-gray-400 cursor-pointer hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            <!-- 头像占位 -->
-            <div class="w-8 h-8 rounded-full bg-indigo-500 overflow-hidden ml-2 border border-gray-600">
-                 <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jian" alt="Avatar" class="w-full h-full object-cover">
-            </div>
-        </div>
-        
-        <!-- 右侧菜单 -->
-        <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
-            <a href="#" class="text-white border-b-2 border-white pb-1">首页</a>
-            <a href="#" class="hover:text-white transition">每日新闻</a>
-            <a href="#" class="hover:text-white transition flex items-center gap-1">博客 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></a>
-            <a href="#" class="hover:text-white transition">相册</a>
-            <a href="#" class="hover:text-white transition flex items-center gap-1">小虾 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></a>
+    <!-- === 背景视觉层 (动态光晕) === -->
+    <div class="fixed inset-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+        <!-- 左上角紫色光球 -->
+        <div class="absolute top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-purple-900/40 rounded-full mix-blend-screen filter blur-[120px] animate-blob"></div>
+        <!-- 右下角蓝色光球 -->
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40rem] h-[40rem] bg-blue-900/40 rounded-full mix-blend-screen filter blur-[120px] animate-blob animation-delay-2000"></div>
+    </div>
+
+    <!-- === 顶部极简导航 === -->
+    <nav class="fixed top-0 w-full p-6 z-50 flex justify-between items-center fade-up">
+        <div class="text-white/80 font-bold tracking-widest text-sm uppercase">PETER.DEV</div>
+        <div class="flex gap-6 text-sm font-medium text-white/60">
+            <a href="#" class="hover:text-white transition-colors duration-300">文章</a>
+            <a href="#" class="hover:text-white transition-colors duration-300">项目</a>
+            <a href="#" class="hover:text-white transition-colors duration-300">关于</a>
         </div>
     </nav>
 
-    <!-- 主体内容区域 -->
-    <main class="max-w-7xl mx-auto px-8 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10">
+    <!-- === 核心内容区 === -->
+    <main class="relative z-10 w-full max-w-4xl px-6 py-20 flex flex-col items-center text-center">
         
-        <!-- 左侧光晕 -->
-        <div class="glow-bg"></div>
+        <!-- 身份标识 -->
+        <div class="fade-up delay-100 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs text-white/70 tracking-wider mb-8 hover:bg-white/10 transition-all duration-300 cursor-default">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            探索 AI 与工程的边界
+        </div>
 
-        <!-- === 左侧区域：Hero Section === -->
-        <div class="flex flex-col justify-center relative z-10">
-            <!-- 标签 -->
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-800/50 border border-gray-700/50 text-xs w-max mb-6">
-                <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
-                <span class="text-gray-300 tracking-wider">JIAN の BLOG</span>
+        <!-- 主标题 -->
+        <h1 class="fade-up delay-200 text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
+            Hi, I'm <span class="text-gradient">Peter</span>.<br>
+            AI Engineer & Builder.
+        </h1>
+
+        <!-- 副标题/描述 -->
+        <p class="fade-up delay-300 text-lg md:text-xl text-gray-400 mb-12 max-w-2xl font-light leading-relaxed">
+            我不只是写代码，我将人工智能转化为优雅的工程化产品。专注于大模型应用、数据算法以及令人惊叹的用户体验。
+        </p>
+
+        <!-- 技能堆栈 (磁性标签) -->
+        <div class="fade-up delay-400 flex flex-wrap justify-center gap-3 mb-14 max-w-3xl">
+            <!-- 这里运用了 group-hover 实现细腻的交互感 -->
+            <div class="group px-5 py-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer">
+                <span class="text-gray-300 group-hover:text-blue-400 transition-colors">Python & PyTorch</span>
             </div>
-
-            <!-- 大标题 -->
-            <h1 class="text-7xl md:text-8xl font-bold leading-tight tracking-tight mb-4 flex items-center gap-4">
-                Hello<br>World 
-                <!-- 地球图标占位 -->
-                <span class="text-6xl mt-4">🌍</span>
-            </h1>
-            
-            <p class="text-gray-400 text-lg mb-8">AI 工程师 | 记录技术、 生活与思考</p>
-
-            <!-- 技能标签 -->
-            <div class="flex flex-wrap gap-3 mb-10">
-                <span class="px-4 py-2 rounded-full bg-gray-800/40 border border-gray-700/50 text-sm hover:bg-gray-700/50 cursor-pointer transition">AI 工程实践</span>
-                <span class="px-4 py-2 rounded-full bg-emerald-900/30 text-emerald-400 border border-emerald-800/50 text-sm">5 篇内容沉淀</span>
-                <span class="px-4 py-2 rounded-full bg-gray-800/40 border border-gray-700/50 text-sm hover:bg-gray-700/50 cursor-pointer transition">技术 · 生活 · 思考</span>
+            <div class="group px-5 py-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer">
+                <span class="text-gray-300 group-hover:text-purple-400 transition-colors">LLM Agents</span>
             </div>
-
-            <!-- 按钮组 -->
-            <div class="flex items-center gap-4 mb-10">
-                <button class="px-8 py-3 rounded-2xl bg-slate-700 hover:bg-slate-600 text-white font-semibold transition shadow-lg">浏览文章</button>
-                <button class="px-8 py-3 rounded-2xl bg-transparent border border-gray-600 hover:bg-gray-800 text-white font-semibold transition">关于我</button>
+            <div class="group px-5 py-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer">
+                <span class="text-gray-300 group-hover:text-emerald-400 transition-colors">Data Science</span>
             </div>
-
-            <!-- 社交图标 -->
-            <div class="flex items-center gap-4">
-                <a href="#" class="p-3 rounded-full bg-gray-800/50 border border-gray-700/50 hover:text-accent-cyan transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"></path></svg></a>
-                <a href="#" class="p-3 rounded-full bg-gray-800/50 border border-gray-700/50 hover:text-accent-cyan transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></a>
-                <a href="#" class="p-3 rounded-full bg-gray-800/50 border border-gray-700/50 hover:text-accent-cyan transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 19C6 19 8 13 14 13M6 13C6 13 8 7 14 7M4 19A2 2 0 006 21H18A2 2 0 0020 19V5A2 2 0 0018 3H6A2 2 0 004 5V19Z"></path></svg></a>
+            <div class="group px-5 py-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer">
+                <span class="text-gray-300 group-hover:text-pink-400 transition-colors">Web Frontend</span>
             </div>
         </div>
 
-        <!-- === 右侧区域：搜索互动卡片 === -->
-        <div class="relative flex items-center justify-center lg:justify-end mt-12 lg:mt-0 pt-10 pr-4">
+        <!-- 交互面板 (Glassmorphism 玻璃拟态) -->
+        <div class="fade-up delay-500 glass-panel w-full p-8 md:p-10 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8 group">
+            <div class="text-left flex-1">
+                <h3 class="text-2xl font-semibold mb-2 text-white">随时准备构建下一个酷东西。</h3>
+                <p class="text-gray-400 text-sm">阅读我的技术博客，或者查看我最近开源的项目代码。</p>
+            </div>
             
-            <!-- 倾斜的二次元插图 (绝对定位在卡片上方) -->
-            <!-- 注意：这里使用了一张随机动漫图代替，你可以替换 src 为你自己的图片 -->
-            <img src="https://i.pinimg.com/736x/d6/ed/b5/d6edb5da1e43b67954e3895e7960fc0e.jpg" 
-                 alt="Logbook Character" 
-                 class="absolute top-[-40px] right-[20px] w-48 h-64 object-cover rounded-xl shadow-2xl z-20 border-4 border-gray-800"
-                 style="transform: rotate(10deg);">
-
-            <!-- 主卡片容器 -->
-            <div class="bg-card-dark border border-gray-700/50 rounded-3xl p-8 w-full max-w-md relative z-10 shadow-2xl">
-                
-                <p class="text-accent-cyan text-xs font-bold tracking-widest mb-2">EXPLORE</p>
-                <h2 class="text-3xl font-bold mb-4 leading-tight">从首页直接<br>搜索整个网站。</h2>
-                <p class="text-gray-400 text-sm mb-8 leading-relaxed">
-                    输入关键词后回车，直接带您去所有文章、日常记录和相册内容。
-                </p>
-
-                <!-- 搜索框区域 -->
-                <div class="bg-gray-900/50 border border-gray-700/80 rounded-2xl p-2 flex items-center mb-6">
-                    <svg class="w-5 h-5 text-gray-500 ml-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    <input type="text" placeholder="搜索文章、相册、日常记录..." class="bg-transparent border-none outline-none text-sm text-gray-300 w-full placeholder-gray-600">
-                    <button class="bg-accent-cyan hover:bg-cyan-600 text-white text-sm font-semibold py-2 px-5 rounded-xl transition shadow-[0_0_15px_rgba(6,182,212,0.4)]">进入搜索</button>
-                </div>
-
-                <!-- 底部快捷标签 -->
-                <div class="flex flex-wrap gap-2">
-                    <span class="px-4 py-1.5 rounded-full bg-gray-800/60 border border-gray-700/50 text-xs text-gray-300 cursor-pointer hover:text-white transition">首页</span>
-                    <span class="px-4 py-1.5 rounded-full bg-gray-800/60 border border-gray-700/50 text-xs text-gray-300 cursor-pointer hover:text-white transition">每日新闻</span>
-                    <span class="px-4 py-1.5 rounded-full bg-gray-800/60 border border-gray-700/50 text-xs text-gray-300 cursor-pointer hover:text-white transition">博客</span>
-                    <span class="px-4 py-1.5 rounded-full bg-gray-800/60 border border-gray-700/50 text-xs text-gray-300 cursor-pointer hover:text-white transition">相册</span>
-                    <span class="px-4 py-1.5 rounded-full bg-gray-800/60 border border-gray-700/50 text-xs text-gray-300 cursor-pointer hover:text-white transition">小虾</span>
-                </div>
+            <div class="flex gap-4">
+                <!-- 主要按钮 -->
+                <button class="relative overflow-hidden px-8 py-3.5 rounded-2xl bg-white text-black font-semibold shadow-[0_0_40px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_rgba(255,255,255,0.5)] hover:scale-105 transition-all duration-300">
+                    浏览博客
+                </button>
+                <!-- 纯净的 GitHub 图标按钮 -->
+                <a href="#" class="p-3.5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/20 hover:-translate-y-1 transition-all duration-300 text-white flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"></path></svg>
+                </a>
             </div>
         </div>
 
